@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-particle-system-component@1.2.0/dist/aframe-particle-system-component.min.js"></script>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <a-asset-item id="nether-obj" src="3D_Models/netherlands.glb"></a-asset-item>
+            <a-asset-item id="turkey-obj" src="3D_Models/Turkey.glb"></a-asset-item>
+            <a-asset-item id="malta-obj" src="3D_Models/Malta.glb"></a-asset-item>
+            <a-asset-item id="sky" src="3D_Models/ocean_sky_sphere.glb"></a-asset-item>
+            <img id="Turkey-info" src="Images/Turkey-anti-400x389.png">
+            <img id="Malta-info" src="Images/Malta-anti-400x389.png">
+            <img id="Netherlands-info" src="Images/Netherlands-anti-400x389.png">
+            <img id="menu" src="Images/Menu-VR.png">
+            <img id="space" src="Images/Space.png">
+            <img id="map" src="Images/Map-With-Overlays.png">
+            <img id="instructions-bg" src="Images/Instructions-bg.png">
+            <img id="play" src="Images/Play.png">
+            <img id="instructions" src="Images/Instructions.png">
+            <img id="exit" src="Images/Exit.png">
+            <img id="tutorial-1" src="Images/Tutorial-1.png">
+            <img id="tutorial-2" src="Images/Tutorial-2.png">
+            <img id="tutorial-3" src="Images/Totorial-3.png">
+            <audio id="click" src="Sounds/Click.mp3"></audio>
+        </a-assets>
+
+        <a-sky position="2000 3900 2500" color="#440000" material="src:#space" scale="16 16 16"></a-sky>
+        <a-entity position="0 10000 20" id="user-box">
+            <!--Camera entity-->
+            <a-entity camera look-controls>
+                <a-cursor fuse-timeout="1000" fuse="true"
+                    raycaster="objects: .clickable-variable,.menu,.menu-country,.test-variable" scale="0.5 0.5 0.5"
+                    animation__click="property: scale; startEvents: click; easing: easeInCubic; dur: 100; from: 0.1 0.1 0.1; to: 0.5 0.5 0.5"
+                    animation__fusing="property: scale; startEvents: fusing; easing: easeInCubic; dur: 1000; from: 0.5 0.5 0.5; to: 0.1 0.1 0.1"
+                    animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeInCubic; dur: 375; to: 0.5 0.5 0.5">
+                </a-cursor>
+
+                <a-entity position=" 0 0.5 0" id="on-screen-gui" visible="true">
+
+                    <a-text id="country-text" color="white" value="Start Menu" position="0 -0.03 -0.6"
+                        scale="0.15 0.15 0.15" align="center"></a-text>
+                    <a-box color="#008000" position="0 0.05 -0.7" scale="1 0.1 0.001"></a-box>
+
+                    <a-entity id="results-gui" visible="false">
+                        <a-text id="money-text" color="white" value="Rent" position="-0.345 -0.09 -0.6"
+                            scale="0.1 0.1 0.1" align="center"></a-text>
+                        <a-box color="#6EE373" position="-0.4 -0.05 -0.7" scale="0.2 0.1 0.001"></a-box>
+                        <a-text id="money-value" color="white" value="9999 Euros" position="-0.345 -0.12 -0.6"
+                            scale="0.12 0.12 0.12" align="center"></a-text>
+
+                        <a-text id="temperature-text" color="white" value="Temperature" position="0 -0.09 -0.6"
+                            scale="0.1 0.1 0.1" align="center"></a-text>
+                        <a-box color="#E36E6E" position="0 -0.05 -0.7" scale="0.2 0.1 0.001"></a-box>
+                        <a-text id="temperature-value" color="white" value="100C" position="0 -0.125 -0.6"
+                            scale="0.12 0.12 0.12" align="center"></a-text>
+
+                        <a-text id="happiness-text" color="white" value="Happiness" position="0.345 -0.09 -0.6"
+                            scale="0.1 0.1 0.1" align="center"></a-text>
+                        <a-box color="#E1E36E" position="0.4 -0.05 -0.7" scale="0.2 0.1 0.001"></a-box>
+                        <a-text id="happiness-value" color="white" value="100%" position="0.345 -0.125 -0.6"
+                            scale="0.12 0.12 0.12" align="center"></a-text>
+                    </a-entity>
+
+                </a-entity>
+            </a-entity>
+            <!--Camera entity-->
+            <a-entity class="gui-variables" visible="true">
+
+                <!--Open/Close entity-->
+                <a-entity position="2 0 -2" rotation="0 -45 0">
+                    <a-text class="text-in-country" color="white" value="Open" id="menu-button-variable-text"
+                        position="0 0.5 -2" align="center" visible="false"></a-text>
+                    <a-box color="#008000" id="menu-button-variable" position="0 0.5 -2.01" scale="2 0.8 0.01"
+                        sound="src: #click; on: click" class="unmenu-country" visible="false"></a-box>
+                </a-entity>
+                <!--Open/Close entity-->
+
+                <!--Return entity-->
+                <a-entity position="-2 2 -2" rotation="30 45 0">
+                    <a-text class="text-in-country" color="white" value="Return" id="menu-return-country-text"
+                        position="0 0.5 -2" align="center" visible="false"></a-text>
+                    <a-box color="#008000" id="menu-return-country" position="0 0.5 -2.01" scale="2 0.8 0.01"
+                        class="unmenu-country" visible="false" sound="src: #click; on: click"
+                        event-set__click="_event: click; _target: #user-box;animation.property:position;animation.to:0 8001 5;animation.dur:500"
+                        onclick="(()=>{LeaveCountry();changeGuiTop('Selection Menu')})()"></a-box>
+                </a-entity>
+                <!--Return entity-->
+
+                <a-entity position="-2 2 3" rotation="30 140 0">
+                    <a-text class="text-in-country" id="info-text" color="white" value="Show Info"
+                        position="0 0.5 -2" align="center" visible="false"></a-text>
+                    <a-box color="#008000" position="0 0.5 -2.01" scale="2 0.8 0.01"
+                        class="unmenu-country" visible="false" sound="src: #click; on: click"
+                        onclick="(()=>{if (document.querySelector('#info-text').getAttribute('value')=='Show Info'){document.querySelector('#info-text').setAttribute('value','Hide Info');document.querySelector('#info-image').setAttribute('visible', 'true')}else{document.querySelector('#info-text').setAttribute('value','Show Info');document.querySelector('#info-image').setAttribute('visible', 'false')}})()"></a-box>
+                    <a-image visible="false" id="info-image" rotation="-30 0 0" position="0 -2 -1" width="4" height="3.89" depth="0.2" src="#Malta-info"></a-image>
+                </a-entity>
+
+                <!--The actual buttons/variables-->
+                <a-entity visible="false" id="menu-with-buttons">
+                    <!--X/Front Side-->
+                    <a-entity position="-2 5 -5">
+                        <a-text color="white" value="Cars in the world" position="0 0.6 -1.9" align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="cartotal" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="cartotalH" color="#000" width="0.1" height="0.3" depth="0.1" position="-0.4 0 -2"
+                            sound="src: #click; on: click"></a-box>
+                        <a-text color="white" id="cartotalV" value="1,500,000,000" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+                    <a-entity position="2 5 -5">
+                        <a-text color="white" value="\nElectric cars\n%" position="0 0.6 -1.9" align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="carelectric_" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="carelectric_H" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.940 0 -2"></a-box>
+                        <a-text color="white" id="carelectric_V" value="3%" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+
+                    <a-entity position="-2 3 -5">
+                        <a-text color="white" value="\nWater Waste\n%" position="0 0.6 -1.9" align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="waterwaste_" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="waterwaste_H" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="0 0 -2"></a-box>
+                        <a-text color="white" id="waterwaste_V" value="50%" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+                    <a-entity position="2 3 -5">
+                        <a-text color="white" value="\nYearly\nIndustrial Gas Emmisions\nMegatonnes"
+                            position="0 0.6 -1.9" align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2.8 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="gastotal" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="gastotalH" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.2 0 -2"></a-box>
+                        <a-text color="white" id="gastotalV" value="40,000" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+
+                    <a-entity position="-2 1 -5">
+                        <a-text color="white" value="\nYearly Deforestation\n%" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2.5 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="defor" class="unclickable-variable" color="#fff" width="2" height="0.2" depth="0.05"
+                            position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="deforH" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.969 0 -2"></a-box>
+                        <a-text color="white" id="deforV" value="0.16" position="0 -0.3 -1.9" align="center"></a-text>
+                    </a-entity>
+                    <a-entity position="2 1 -5">
+                        <a-text color="white" value="\nRenewable Energy\n%" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="renewenergy_" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="renewenergy_H" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.308 0 -2"></a-box>
+                        <a-text color="white" id="renewenergy_V" value="35%" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+
+                    <a-entity position="-2 -1 -5">
+                        <a-text color="white" value="\nYearly Meat Consumption\nTonnes" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2.7 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="meat" class="unclickable-variable" color="#fff" width="2" height="0.2" depth="0.05"
+                            position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="meatH" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="0.46 0 -2"></a-box>
+                        <a-text color="white" id="meatV" value="370,000,000" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+                    <a-entity position="2 -1 -5">
+                        <a-text color="white" value="\nYearly Plastic Waste\nMegatonnes" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2.7 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="plasticwaste" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="plasticwasteH" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.557 0 -2"></a-box>
+                        <a-text color="white" id="plasticwasteV" value="220" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+                    <!--X/Front Side-->
+
+
+
+                    <!--Z/Right Side-->
+                    <a-entity position="5 5 -2" rotation="0 -90 0">
+                        <a-text color="white" value="\nPublic Transport Usage\n%" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2.6 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="publictrans_" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="publictrans_H" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.3 0 -2"></a-box>
+                        <a-text color="white" id="publictrans_V" value="35%" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+                    <a-entity position="5 5 2" rotation="0 -90 0">
+                        <a-text color="white" value="Air Conditiorers In Use" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2.4 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="aircon" class="unclickable-variable" color="#fff" width="2" height="0.2" depth="0.05"
+                            position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="airconH" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.6 0 -2"></a-box>
+                        <a-text color="white" id="airconV" value="2,000,000,000" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+
+                    <a-entity position="5 3 -2" rotation="0 -90 0">
+                        <a-text color="white" value="\nTrees Planted\nYearly" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="treeplant" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="treeplantH" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.6 0 -2"></a-box>
+                        <a-text color="white" id="treeplantV" value="2,000,000,000" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+                    <a-entity position="5 3 2" rotation="0 -90 0">
+                        <a-text color="white" value="\nFactory Filter Efficiency\n%" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2.4 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="factory_" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="factory_H" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.091 0 -2"></a-box>
+                        <a-text color="white" id="factory_V" value="45%" position="0 -0.3 -1.9" align="center"></a-text>
+                    </a-entity>
+
+                    <a-entity position="5 1 -2" rotation="0 -90 0">
+                        <a-text color="white" value="\nClimate Education Funding\nEuros" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2.8 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="funding" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="fundingH" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-1 0 -2"></a-box>
+                        <a-text color="white" id="fundingV" value="1,500,000,000" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+                    <a-entity position="5 1 2" rotation="0 -90 0">
+                        <a-text color="white" value="\nYearly Littering\nMegatonnes" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="littering" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="litteringH" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.8 0 -2"></a-box>
+                        <a-text color="white" id="litteringV" value="1,000" position="0 -0.3 -1.9"
+                            align="center"></a-text>
+                    </a-entity>
+
+                    <a-entity position="5 -1 -2" rotation="0 -90 0">
+                        <a-text color="white" value="\nPeople Recycling\n%" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="recycle_" class="unclickable-variable" color="#fff" width="2" height="0.2"
+                            depth="0.05" position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="recycle_H" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.7 0 -2"></a-box>
+                        <a-text color="white" id="recycle_V" value="15%" position="0 -0.3 -1.9" align="center"></a-text>
+                    </a-entity>
+                    <a-entity position="5 -1 2" rotation="0 -90 0">
+                        <a-text color="white" value="\nPeople Living Eco-Friendly\n%" position="0 0.6 -1.9"
+                            align="center"></a-text>
+                        <a-box color="#00b00b" position="0 0.5 -2" scale="2.8 0.8 0"></a-box>
+                        <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                        <a-box id="eco_" class="unclickable-variable" color="#fff" width="2" height="0.2" depth="0.05"
+                            position="0 0 -2" sound="src: #click; on: click"></a-box>
+                        <a-box id="eco_H" color="#000" width="0.1" height="0.3" depth="0.1"
+                            position="-0.92 0 -2"></a-box>
+                        <a-text color="white" id="eco_V" value="4%" position="0 -0.3 -1.9" align="center"></a-text>
+                    </a-entity>
+                    <!--Z/Right Side-->
+                </a-entity>
+                <!--The actual buttons/variables-->
+            </a-entity>
+            <!--gui elements in the box including Open/Close , Return , Variables-->
+
+        </a-entity>
+
+        <a-entity position="0 10001 5" id="start-menu">
+            <a-sky scale="2 2 2" position="0 0 0" material="shader: flat;src: #space"></a-sky>
+
+            <a-image position="0 0 -0.2" width="19.2" height="10.8" depth="0.2" src="#menu"></a-image>
+            <a-image width="4.7" height="0.99" depth="0.05" position="0 0 0" src="#play" class="menu"
+                sound="src: #click; on: click"
+                event-set__click="_event: click; _target: #user-box;animation.property:position;animation.to:0 8001 5;animation.dur:1000"
+                onclick="changeGuiTop('Selection Menu')"></a-image>
+            <a-image width="8.08" height="0.99" depth="0.05" position="0 -2 0" src="#instructions" class="menu"
+                sound="src: #click; on: click"
+                event-set__click="_event: click; _target: #user-box;animation.property:position;animation.to:0 10001 2020;animation.dur:1000"
+                onclick="changeGuiTop('Instructions Menu')"></a-image>
+            <a-image width="4.7" height="0.99" depth="0.05" position="0 -4 0" src="#exit" class="menu"
+                sound="src: #click; on: click"
+                onclick="(()=>{window.close()})()"></a-image>
+            <a-text color="white" value="Strahinja Lilic" position="6 -4.5 0.5" scale="2 2 2"></a-text>
+        </a-entity>
+
+        <a-entity position="0 10001 2012" id="instructions-menu">
+            <a-sky scale="2 2 2" position="0 0 0" material="shader: flat;src: #space"></a-sky>
+
+            <a-image position="9.497 0 8.372" rotation="0 -90 0" width="18" height="18" depth="0.2" src="#tutorial-1"></a-image>
+            <a-text position="8.497 5.431 2.927" scale="2 2 2" rotation="0 -90 0" color="#000" value="You can access the variables upon clikcing the Open button which in the game will be located in front of you slightly to the right"></a-text>
+            <a-image position="-9.487 0 8.372" rotation="0 90 0" width="18" height="18" depth="0.2" src="#tutorial-2"></a-image>
+            <a-text position="-9.144 5.991 12.690" scale="2 2 2" rotation="0 90 0" color="#000" value="You can leave the country by clikcing the Return button which in the game will be located in front of you slightly to the left"></a-text>
+            <a-image position="0 0 16.700" rotation="0 180 0" width="18" height="18" depth="0.2" src="#tutorial-3"></a-image>
+            <a-text position="3.943 6.021 16.695" scale="2 2 2" rotation="0 180 0" color="#000" value="You can view how a country will protect themselves from the climate change by pressing the Show Info button which in game will be located behind you slightly to the right"></a-text>
+
+
+            <a-image position="0 0 -0.2" width="18" height="10.125" depth="0.2" src="#instructions-bg"
+                color="#aaa"></a-image>
+
+            <!--Return-->
+            <a-entity position="-6.5 4 -0.147" rotation="0 0 0">
+                <a-text color="white" value="Return" id="menu-return-instruction-text" position="-0.725 0.280 0.080"
+                    align="center" scale="1.5 1.5 1.5"></a-text>
+                <a-box color="#008000" id="menu-return-instruction" position="-0.765 0.280 0" scale="2.5 1 0.01"
+                    class="menu" sound="src: #click; on: click"
+                    event-set__click="_event: click; _target: #user-box;animation.property:position;animation.to:0 10000 20;animation.dur:1000"
+                    onclick="changeGuiTop('Start Menu')"></a-box>
+            </a-entity>
+            <!--Return-->
+
+            <!--Button-->
+            <a-entity position="-3 2.9 2" rotation="0 0 0">
+                <a-text color="white" value="[Example]" position="-0.725 0 -1.9" align="center"></a-text>
+                <a-box color="#008000" position="-0.765 0 -2" scale="2 0.7 0.01" class="test-variable"
+                    sound="src: #click; on: click"></a-box>
+
+                <a-box color="#008008" position="-0.8 -1.85 -2" scale="3.2 2.5 0"></a-box>
+                <a-text color="white" value="Where it says Example it is" position="-2.1 -0.875 -1.9"></a-text>
+                <a-text color="white" value="the placeholder for the" position="-2.1 -1.175 -1.9"></a-text>
+                <a-text color="white" value="button name" position="-2.1 -1.475 -1.9"></a-text>
+
+
+                <a-text color="white" value="Hover over the actual" position="-2.1 -2.15 -1.9"></a-text>
+                <a-text color="white" value='button in order "click it"' position="-2.1 -2.45 -1.9"></a-text>
+            </a-entity>
+
+            <!--Button-->
+            <!--Slider-->
+            <a-entity position="0 3 2" rotation="0 0 0">
+                <a-text color="white" value="\n[Variable]\n[Unit]" position="0 0.6 -1.9" align="center"></a-text>
+                <a-box color="#00b00b" position="0 0.5 -2" scale="2 0.8 0"></a-box>
+                <a-box color="#00b00b" position="0 -0.1 -2" scale="3 0.8 0"></a-box>
+                <a-box id="test" class="test-variable" color="#fff" width="2" height="0.2" depth="0.05"
+                    position="0 0 -2" sound="src: #click; on: click"></a-box>
+                <a-box id="testH" color="#000" width="0.1" height="0.3" depth="0.1" position="0 0 -2"></a-box>
+                <a-text color="white" id="testV" value="500,000,000" position="0 -0.3 -1.9" align="center"></a-text>
+
+                <a-box color="#008008" position="0 -2 -2" scale="3.2 2.5 0"></a-box>
+                <a-text color="white" value="Where it says Variable it is" position="-1.4 -1 -1.9"></a-text>
+                <a-text color="white" value="the placeholder of the " position="-1.4 -1.3 -1.9"></a-text>
+                <a-text color="white" value="variable, Unit is placeholder" position="-1.4 -1.6 -1.9"></a-text>
+                <a-text color="white" value="for the unit eg: Euros/Liters" position="-1.4 -1.9 -1.9"></a-text>
+
+
+                <a-text color="white" value="Hover over the white space" position="-1.4 -2.4 -1.9"></a-text>
+                <a-text color="white" value="where you want the % of the" position="-1.4 -2.7 -1.9"></a-text>
+                <a-text color="white" value="slider to be at" position="-1.4 -3 -1.9"></a-text>
+            </a-entity>
+            <!--Slider-->
+
+            <!--Explanation-->
+            <a-entity position="4.3 1.8 0">
+                <a-box color="#000080" position="0 0 0" scale="4 4 0"></a-box>
+                <a-text color="white" value="This Simulation was created in order" position="-1.85 1.7 0.1"></a-text>
+                <a-text color="white" value='to simulate "realistic" values in a' position="-1.85 1.4 0.1"></a-text>
+                <a-text color="white" value='VR environment, all the values are' position="-1.85 1.1 0.1"></a-text>
+                <a-text color="white" value='researched and algorithm was being' position="-1.85 0.8 0.1"></a-text>
+                <a-text color="white" value='created for a whole week.' position="-1.85 0.5 0.1"></a-text>
+
+                <a-text color="white" value='In the VR simulation you can travel' position="-1.85 0 0.1"></a-text>
+                <a-text color="white" value='different countries by hovering over' position="-1.85 -0.3 0.1"></a-text>
+                <a-text color="white" value='red circles in the selection scene.' position="-1.85 -0.6 0.1"></a-text>
+
+                <a-text color="white" value='Go explore how different countries' position="-1.85 -1.1 0.1"></a-text>
+                <a-text color="white" value='are being affected by global warming' position="-1.85 -1.4 0.1"></a-text>
+                <a-text color="white" value='and what their solutions are.' position="-1.85 -1.7 0.1"></a-text>
+            </a-entity>
+
+            <a-entity position="0 -2.5 0">
+                <a-box color="#000080" position="0 0 0" scale="11 3 0"></a-box>
+                <a-text color="white" value="This is a simulation of year 2100" position="-4.7 1 0.1"
+                    scale="1.5 1.5 1.5"></a-text>
+                <a-text color="white" value="based on humanity's choices" position="0.1 1 0.1"
+                    scale="1.5 1.5 1.5"></a-text>
+                <a-text color="white" value="Netherlands's results are exeggerated by x5"
+                    position="-4.7 0.4 0.1"></a-text>
+                <a-text color="white" value="Malta's results are exeggerated by x10" position="-4.7 0 0.1"></a-text>
+                <a-text color="white" value="(water won't turn green it's just for visualisation)"
+                    position="-0.9 0 0.1"></a-text>
+                <a-text color="white" value="Turkey's results are exeggerated by x20" position="-4.7 -0.4 0.1"></a-text>
+                <a-text color="white" value="(sky won't turn red and viruses can't be"
+                    position="-4.7 -0.7 0.1"></a-text>
+                <a-text color="white" value="seen it's just for visualisation)" position="-0.9 -0.7 0.1"></a-text>
+            </a-entity>
+            <!--Explanation-->
+        </a-entity>
+
+        <a-entity position="0 7985 -1" rotation="-75 0 0" id="selection-menu">
+            <a-sky scale="2 2 2" position="0 0 0" material="shader: flat;src: #space"></a-sky>
+
+            <a-entity position="-15.640 10.730 0.126" rotation="0 0 0">
+                <a-text color="white" value="Return" id="menu-return-selection-text" position="0 0.019 0.072"
+                    align="center" scale="3 3 3"></a-text>
+                <a-box color="#008000" id="menu-return-selection" position="0 0 0" scale="5.000 2.060 0.01" class="menu"
+                    sound="src: #click; on: click"
+                    event-set__click="_event: click; _target: #user-box;animation.property:position;animation.to:0 10000 20;animation.dur:1000"
+                    onclick="changeGuiTop('Start Menu')"></a-box>
+            </a-entity>
+
+            <a-image position="0 2 -0.2" width="38.4" height="21.6" depth="0.2" src="#map"></a-image>
+            <a-box width="3" height="3" depth="0.05" position="-6.291 5.981 -0.061" class="menu" visible="false"
+                event-set__click="_event: click; _target: #user-box;animation.property:position;animation.to:0 20 -5;animation.dur:1000;animation.easing: easeInCirc"
+                onclick="(()=>{EnterCountry('Netherlands');changeGuiTop('Netherlands')})()"
+                sound="src: #click; on: click;maxDistance:100000"></a-box>
+            <a-box width="3" height="3" depth="0.05" position="-1.340 -2.425 0.104" class="menu" visible="false"
+                event-set__click="_event: click; _target: #user-box;animation.property:position;animation.to:0 20 4495;animation.dur:1000;animation.easing: easeInCirc"
+                onclick="(()=>{EnterCountry('Malta');changeGuiTop('Malta');})()"
+                sound="src: #click; on: click;maxDistance:100000"></a-box>
+            <a-box width="3" height="3" depth="0.05" position="8.316 -0.615 -0.142" class="menu" visible="false"
+                event-set__click="_event: click; _target: #user-box;animation.property:position;animation.to:4500 20 -5;animation.dur:1000;animation.easing: easeInCirc"
+                onclick="(()=>{EnterCountry('Turkey');changeGuiTop('Turkey')})()"
+                sound="src: #click; on: click;maxDistance:100000"></a-box>
+        </a-entity>
+
+        <a-entity position="0 0 0" id="netherlands">
+            <a-entity scale="1000 1000 1000" position="-2625.458 0 -1888.851" gltf-model="#sky"></a-entity>
+            <a-entity position="0 3 0" scale="0.05 0.05 0.05" gltf-model="#nether-obj"></a-entity>
+            <a-ocean id="nether-water" position="0 1.13348 0" depth="500" width="500" amplitutde="0"
+                amplitude-variance="0" speed="10" speed-variance="0" opacity="1" density="100"></a-ocean>
+        </a-entity>
+        <a-entity position="0 0 4500" id="malta">
+            <a-entity scale="1000 1000 1000" position="-2625.458 0 -1888.851" gltf-model="#sky"></a-entity>
+            <a-entity position="0 2 0" scale="0.05 0.05 0.05" gltf-model="#malta-obj"></a-entity>
+            <a-ocean id="malta-water" material="color:rgb(100,200,214)" position="0 1.861 0" depth="500" width="500"
+                amplitutde="0" amplitude-variance="0" speed="10" speed-variance="0" opacity="1" density="100"></a-ocean>
+        </a-entity>
+        <a-entity position="4500 0 0" id="turkey">
+
+            <a-entity id="particles" position="0 0 -1"
+                particle-system="color:#000000,#000000;size: 0.1, 0.2;blending:1;positionSpread:50 50 50;particleCount: 1000;velocitySpread: 0 0 0;texture:url(Images/circle.png)"></a-entity>
+
+            <a-entity scale="1000 1000 1000" position="-2625.458 0 -1888.851" id="sky-turkey" gltf-model="#sky"
+                treeman></a-entity>
+            <a-entity position="0 -35 0" scale="0.05 0.05 0.05" gltf-model="#turkey-obj"></a-entity>
+        </a-entity>
+
+        <script>
+            let turkeysky;
+            // Once the model loads it makes turkeysky a variable that i can edit in changeTurkey()
+            document.querySelector('#sky-turkey').addEventListener("model-loaded", e => {
+                document.querySelector('#sky-turkey').getObject3D('mesh').traverse(function (node) {
+                    if (node.isMesh) {
+                        turkeysky = node.material.color;
+                    }
+                });
+            });
+
+
+            let final = 1.03
+            let nether_val;
+            let malta_val;
+            let turkey_val;
+            let currentTimeoutT = null;
+            let currentTimeoutM = null;
+            let currentTimeoutN = null;
+            let values = { 'cartotal': 1500000000, 'carelectric_': 3, 'waterwaste_': 50, 'gastotal': 40000, 'defor': 0.16, 'renewenergy_': 35, 'meat': 370000000, 'plasticwaste': 220, 'publictrans_': 35, 'aircon': 2000000000, 'treeplant': 2000000000, 'factory_': 45, 'funding': 1500000000, 'littering': 1000, 'recycle_': 15, 'eco_': 4 }
+
+            const changeTurkey = (value) => {
+
+                if (currentTimeoutT) {
+                    turkeysky.setRGB(1, 1 / turkey_val, 1 / turkey_val);
+                    clearTimeout(currentTimeoutT);
+                }
+
+                let start = 1 / turkeysky.b
+                console.log(typeof (start))
+                let bigger = value > start
+                let i = start;
+                console.log(i)
+
+                function myLoop() {
+                    currentTimeoutT = setTimeout(function () {
+                        turkey_val = value;
+                        turkeysky.setRGB(1, 1 / i, 1 / i);
+                        console.log(i)
+                        i = bigger ? i + 0.005 : i - 0.005;
+                        if (bigger ? i < value : i > value) {
+                            myLoop();
+                        }
+                    }, 5)
+                }
+
+                myLoop();
+            }
+            const changeTurkey2 = (value) => {
+                document.querySelector('#particles').setAttribute('particle-system', `color:#000000,#000000;size: 0.1, 0.2;blending:1;positionSpread:50 50 50;particleCount: ${getParticleCountFromImpact(value)};velocitySpread: 0 0 0;texture:url(Images/circle.png)`); 
+            }
+            const changeMalta = (value) => {
+
+                if (currentTimeoutM) {
+                    document.querySelector('#malta-water').setAttribute('material', `color:rgb(100,200,${Math.round(Math.max(0, 255 - malta_val * 40))})`)
+                    clearTimeout(currentTimeoutM);
+                }
+
+                let orig = parseInt((document.querySelector("#malta-water").getAttribute("material").color).slice(12, -1))
+
+                let start = Math.max(0, (255 - orig) / 40)
+                console.log(typeof (start))
+                let bigger = value > start          //bigger = false
+                let i = start;      //i = 10      
+                console.log(i)
+
+                function myLoop() {
+                    currentTimeoutM = setTimeout(function () {
+                        malta_val = value;
+                        document.querySelector('#malta-water').setAttribute('material', `color:rgb(100,200,${Math.round(Math.max(0, 255 - i * 40))})`)
+                        console.log(i)
+                        i = bigger ? i + 0.005 : i - 0.005;   //i = i-0.2  
+                        if (bigger ? i < value : i > value) {     //i>start = i>0
+                            myLoop();
+                        }
+                    }, 5)
+                }
+
+                myLoop();
+            }
+            const changeNetherlands = (height) => { //10 -> 0   
+                if (currentTimeoutN) {
+                    document.getElementById("nether-water").setAttribute("position", `0 ${nether_val} 0`)
+                    clearTimeout(currentTimeoutN);
+                }
+                let start = document.getElementById("nether-water").getAttribute("position").y
+                console.log(typeof (start))
+                let bigger = height > start          //bigger = false
+                let i = start;      //i = 10      
+                console.log(i)
+
+
+                function myLoop() {
+                    currentTimeoutN = setTimeout(function () {
+                        nether_val = height;
+                        document.getElementById("nether-water").setAttribute("position", `0 ${i} 0`)
+                        console.log(i)
+                        i = bigger ? i + 0.005 : i - 0.005;   //i = i-0.2  
+                        if (bigger ? i < height : i > height) {     //i>start = i>0
+                            myLoop();
+                        }
+                    }, 5)
+                }
+
+                myLoop();
+            }
+
+            const updateValue = (name, value) => {
+                values[name] = value;
+                console.log(`Updated '${name}' to: ${value}`);
+                console.log(values)
+                final = calculateEnvironmentalImpact(values);
+
+                console.log("Calculated Environmental Impact Score:", final);
+
+                changeTurkey(final);
+                changeTurkey2(final);
+                changeNetherlands(final);
+                changeMalta(final);
+                let country = document.querySelector('#country-text').getAttribute('value')
+
+                document.querySelector('#money-value').setAttribute('value', `${getMoneyNeededForLiving(final, country)} Euros`);
+                document.querySelector('#temperature-value').setAttribute('value', `${getTemperatureFromImpact(final, country)}C`);
+                document.querySelector('#happiness-value').setAttribute('value', `${getHappinessFromImpact(final)}%`);
+            };
+
+
+
+
+            // Helped by Gemini for Weights and Logic 
+            //        I
+            //        I
+            //        V
+            const calculateEnvironmentalImpact = (inputs) => {
+
+                // --- Extract Inputs ---
+                // Dindnt want to use the direct values from inputs. as they might change midway
+                const cars = inputs.cartotal;
+                const electricCarsPercent = inputs.carelectric_;
+                const waterWastePercent = inputs.waterwaste_;
+                const industrialGasEmissions = inputs.gastotal;
+                const deforestationRate = inputs.defor;
+                const renewableEnergyPercent = inputs.renewenergy_;
+                const meatConsumption = inputs.meat;
+                const plasticWaste = inputs.plasticwaste;
+                const publicTransportPercent = inputs.publictrans_;
+                const airConditionerUsage = inputs.aircon;
+                const treesPlanted = inputs.treeplant;
+                const filterEfficiency = inputs.factory_;
+                const climateEducationFunding = inputs.funding;
+                const littering = inputs.littering;
+                const recyclingPercent = inputs.recycle_;
+                const ecoFriendlyPercent = inputs.eco_;
+
+                // --- Define Max Values ---
+                // The values below were decided by me
+                const MAX_CARS = 5000000000;
+                const MAX_ELECTRIC_CARS_PERCENT = 100;
+                const MAX_WATER_WASTE_PERCENT = 100;
+                const MAX_INDUSTRIAL_GAS_EMISSIONS = 100000; // Mt
+                const MAX_DEFORESTATION_RATE = 10; // %
+                const MAX_RENEWABLE_ENERGY_PERCENT = 100; // %
+                const MAX_MEAT_CONSUMPTION = 500000000; // Tonnes
+                const MAX_PLASTIC_WASTE = 1000; // Mt
+                const MAX_PUBLIC_TRANSPORT_PERCENT = 100; // %
+                const MAX_AC_USAGE = 10000000000;
+                const MAX_TREES_PLANTED = 10000000000;
+                const MAX_FILTER_EFFICIENCY = 100; // %
+                const MAX_CLIMATE_EDUCATION_FUNDING = 1000000000000; // USD
+                const MAX_LITTERING = 10000; // Mt (your chosen max)
+                const MAX_RECYCLING_PERCENT = 100; // %
+                const MAX_ECO_FRIENDLY_PERCENT = 100; // %
+
+                // --- Weights ---
+                // The values below were provided by Gemini and are based on the relative impact of each factor
+                const WEIGHT_CARS = 0.20;
+                const WEIGHT_WATER_WASTE = 0.15;
+                const WEIGHT_INDUSTRIAL_GAS_EMISSIONS = 0.30;
+                const WEIGHT_DEFORESTATION = 0.15;
+                const WEIGHT_RENEWABLE_ENERGY = 0.25;
+                const WEIGHT_MEAT_CONSUMPTION = 0.15;
+                const WEIGHT_PLASTIC_WASTE = 0.20;
+                const WEIGHT_PUBLIC_TRANSPORT = 0.10;
+                const WEIGHT_AC_USAGE = 0.18;
+                const WEIGHT_TREES_PLANTED = 0.12;
+                const WEIGHT_FILTER_EFFICIENCY = 0.15;
+                const WEIGHT_CLIMATE_EDUCATION = 0.08;
+                const WEIGHT_LITTERING = 0.20;
+                const WEIGHT_RECYCLING = 0.10;
+                const WEIGHT_ECO_FRIENDLY = 0.10;
+
+                const clamp = (value, min = 0, max = 1) => Math.min(Math.max(value, min), max);
+
+
+                // custom / bad
+                const carsImpact = clamp((cars * (1 - electricCarsPercent / MAX_ELECTRIC_CARS_PERCENT)) / MAX_CARS);
+
+                //bad
+                const waterWasteImpact = clamp(waterWastePercent / MAX_WATER_WASTE_PERCENT);
+                const industrialGasImpact = clamp(industrialGasEmissions / MAX_INDUSTRIAL_GAS_EMISSIONS);
+                const deforestationImpact = clamp(deforestationRate / MAX_DEFORESTATION_RATE);
+                const litteringImpact = clamp(littering / MAX_LITTERING);
+                const meatConsumptionImpact = clamp(meatConsumption / MAX_MEAT_CONSUMPTION);
+                const plasticWasteImpact = clamp(plasticWaste / MAX_PLASTIC_WASTE);
+                const acUsageImpact = clamp(airConditionerUsage / MAX_AC_USAGE);
+
+                //good
+                const renewableEnergyImpact = clamp((MAX_RENEWABLE_ENERGY_PERCENT - renewableEnergyPercent) / MAX_RENEWABLE_ENERGY_PERCENT);
+                const publicTransportImpact = clamp((MAX_PUBLIC_TRANSPORT_PERCENT - publicTransportPercent) / MAX_PUBLIC_TRANSPORT_PERCENT);
+                const treesPlantedImpact = clamp((MAX_TREES_PLANTED - treesPlanted) / MAX_TREES_PLANTED);
+                const filterEfficiencyImpact = clamp((MAX_FILTER_EFFICIENCY - filterEfficiency) / MAX_FILTER_EFFICIENCY);
+                const climateEducationImpact = clamp((MAX_CLIMATE_EDUCATION_FUNDING - climateEducationFunding) / MAX_CLIMATE_EDUCATION_FUNDING);
+                const recyclingImpact = clamp((MAX_RECYCLING_PERCENT - recyclingPercent) / MAX_RECYCLING_PERCENT);
+                const ecoFriendlyImpact = clamp((MAX_ECO_FRIENDLY_PERCENT - ecoFriendlyPercent) / MAX_ECO_FRIENDLY_PERCENT);
+
+                // Initial score
+                let rawScore =
+                    (carsImpact * WEIGHT_CARS) +
+                    (waterWasteImpact * WEIGHT_WATER_WASTE) +
+                    (industrialGasImpact * WEIGHT_INDUSTRIAL_GAS_EMISSIONS) +
+                    (deforestationImpact * WEIGHT_DEFORESTATION) +
+                    (renewableEnergyImpact * WEIGHT_RENEWABLE_ENERGY) +
+                    (meatConsumptionImpact * WEIGHT_MEAT_CONSUMPTION) +
+                    (plasticWasteImpact * WEIGHT_PLASTIC_WASTE) +
+                    (publicTransportImpact * WEIGHT_PUBLIC_TRANSPORT) +
+                    (acUsageImpact * WEIGHT_AC_USAGE) +
+                    (treesPlantedImpact * WEIGHT_TREES_PLANTED) +
+                    (filterEfficiencyImpact * WEIGHT_FILTER_EFFICIENCY) +
+                    (climateEducationImpact * WEIGHT_CLIMATE_EDUCATION) +
+                    (litteringImpact * WEIGHT_LITTERING) +
+                    (recyclingImpact * WEIGHT_RECYCLING) +
+                    (ecoFriendlyImpact * WEIGHT_ECO_FRIENDLY);
+
+                // Score curve
+                const RAW_SCORE_MAX = 2.53;
+
+                const OUTPUT_MIN = 1.1;
+                const OUTPUT_MAX = 4.5;
+                const CURVE_FACTOR = 2.0;
+
+                let curvedScore;
+
+                if (rawScore <= 0.01) { // makes sure that the score is not 0
+                    curvedScore = 0.01;
+                } else {
+                    let normalizedRawScore = rawScore / RAW_SCORE_MAX;
+                    let curvedNormalizedScore = Math.pow(normalizedRawScore, CURVE_FACTOR);
+                    curvedScore = OUTPUT_MIN + (curvedNormalizedScore * (OUTPUT_MAX - OUTPUT_MIN));
+                    const CURRENT_RAW_SCORE_TARGET = 1;
+                    const CURRENT_OUTPUT_SCORE = 1;
+
+                    if (rawScore <= CURRENT_RAW_SCORE_TARGET) {
+                        curvedScore = (rawScore / CURRENT_RAW_SCORE_TARGET) * CURRENT_OUTPUT_SCORE;
+                    } else {
+                        let normalizedCurvedSegment = (rawScore - CURRENT_RAW_SCORE_TARGET) / (RAW_SCORE_MAX - CURRENT_RAW_SCORE_TARGET);
+                        let poweredSegment = Math.pow(normalizedCurvedSegment, CURVE_FACTOR);
+                        curvedScore = CURRENT_OUTPUT_SCORE + (poweredSegment * (OUTPUT_MAX - CURRENT_OUTPUT_SCORE));
+                    }
+                }
+
+                return curvedScore;
+            }
+
+
+            // Logic revised by help of Stack Overflow and Gemini
+            //        I
+            //        I
+            //        V
+            const getHappinessFromImpact = (environmentalScore) => {
+                // List of control points
+                const controlPoints = [
+                    [0, 95],   // At environmentalScore 0, happiness is 95%
+                    [1, 70],
+                    [3, 25],
+                    [4, 10]    // At environmentalScore 4, happiness is 10%
+                ];
+                environmentalScore = Math.max(0.01, environmentalScore);// made it to minimum 0.01 so its above control point 0
+
+                let happinessPercentage;
+
+                // Checks which part of the variable controlPoints, environmentalScore is in
+                for (let i = 0; i < controlPoints.length - 1; i++) {
+                    const [x1, y1] = controlPoints[i];
+                    const [x2, y2] = controlPoints[i + 1];
+
+                    if (environmentalScore >= x1 && environmentalScore <= x2) {
+                        //happinessPercentage = control point value of index smaller than enviromentalScore +  ( enviromentalScore - index of smaller control point index) * (bigger control point value - smaller control point value) / (bigger control point index - smaller control point index)
+                        happinessPercentage = y1 + (environmentalScore - x1) * (y2 - y1) / (x2 - x1);
+                        break;
+                    }
+                }
+                // Once the value of happinessPercentage was set, it checks if environmentalScore is bigger than the last control point
+                if (environmentalScore > controlPoints[controlPoints.length - 1][0]) {
+                    const [x1, y1] = controlPoints[controlPoints.length - 2];
+                    const [x2, y2] = controlPoints[controlPoints.length - 1];
+                     //then it calculates the slope
+                    const slope = (y2 - y1) / (x2 - x1);
+                    //Sets the happinessPercentage to the value of the last control point + (environmentalScore - last control point index) * slope
+                    happinessPercentage = y2 + (environmentalScore - x2) * slope;
+                }
+                happinessPercentage = Math.max(happinessPercentage, 5);  // Cap at 5% minimum
+                happinessPercentage = Math.min(happinessPercentage, 100); // Cap at 100% maximum
+
+                return Math.round(happinessPercentage);
+            };
+
+            // Logic is same as the previous function, but with country-specific control points
+            const getTemperatureFromImpact = (environmentalScore, country) => {
+                // Object that holds lists corresponding to each country
+                const countryTempControlPoints = {
+                    'Netherlands': [
+                        [0, 9.0],
+                        [1, 11.0],
+                        [4, 16.0]
+                    ],
+                    'Malta': [
+                        [0, 19.0],
+                        [1, 21.0],
+                        [4, 26.0]
+                    ],
+                    'Turkey': [
+                        [0, 13.0],
+                        [1, 15.0],
+                        [4, 20.0]
+                    ]
+                };
+
+                const controlPoints = countryTempControlPoints[country];
+
+                environmentalScore = Math.max(0.01, environmentalScore);
+                let temperatureCelsius;
+                // Same logic as the previous function
+                for (let i = 0; i < controlPoints.length - 1; i++) {
+                    const [x1, y1] = controlPoints[i];
+                    const [x2, y2] = controlPoints[i + 1];
+
+                    if (environmentalScore >= x1 && environmentalScore <= x2) {
+                        temperatureCelsius = y1 + (environmentalScore - x1) * (y2 - y1) / (x2 - x1);
+                        break;
+                    }
+                }
+
+                if (environmentalScore > controlPoints[controlPoints.length - 1][0]) {
+                    const [x1, y1] = controlPoints[controlPoints.length - 2];
+                    const [x2, y2] = controlPoints[controlPoints.length - 1];
+                    const slope = (y2 - y1) / (x2 - x1);
+                    temperatureCelsius = y2 + (environmentalScore - x2) * slope;
+                }
+
+                temperatureCelsius = Math.min(temperatureCelsius, 30.0);
+                temperatureCelsius = Math.max(temperatureCelsius, 5.0);
+                return parseFloat(temperatureCelsius.toFixed(2));
+            };
+
+            // Logic is same as the previous function, but with different control points
+            const getMoneyNeededForLiving = (environmentalScore, country) => {
+                const countryMoneyControlPoints = {
+                    'Netherlands': [
+                        [0, 1800],
+                        [1, 2200],
+                        [4, 4000]
+                    ],
+                    'Malta': [
+                        [0, 1200],
+                        [1, 1600],
+                        [4, 3000]
+                    ],
+                    'Turkey': [
+                        [0, 500],
+                        [1, 700],
+                        [4, 1500]
+                    ]
+                };
+                const controlPoints = countryMoneyControlPoints[country];
+                environmentalScore = Math.max(0.01, environmentalScore);
+                let monthlyEuroCost;
+                for (let i = 0; i < controlPoints.length - 1; i++) {
+                    const [x1, y1] = controlPoints[i];
+                    const [x2, y2] = controlPoints[i + 1];
+                    if (environmentalScore >= x1 && environmentalScore <= x2) {
+                        monthlyEuroCost = y1 + (environmentalScore - x1) * (y2 - y1) / (x2 - x1);
+                        break;
+                    }
+                }
+                if (environmentalScore > controlPoints[controlPoints.length - 1][0]) {
+                    const [x1, y1] = controlPoints[controlPoints.length - 2];
+                    const [x2, y2] = controlPoints[controlPoints.length - 1];
+                    const slope = (y2 - y1) / (x2 - x1);
+                    monthlyEuroCost = y2 + (environmentalScore - x2) * slope;
+                }
+                monthlyEuroCost = Math.min(monthlyEuroCost, 10000);
+                monthlyEuroCost = Math.max(monthlyEuroCost, 300);
+                return Math.round(monthlyEuroCost);
+            };
+
+           // Logic is same as the getHappinessFromImpact() function, but with different control points and is used for the function changeTurkey2()
+            const getParticleCountFromImpact = (environmentalScore) => {
+
+                const controlPoints = [
+                    [0, 200],
+                    [1, 1000],
+                    [4.5, 10000]
+                ];
+                environmentalScore = Math.max(0.01, environmentalScore);
+                let particleCount;
+                for (let i = 0; i < controlPoints.length - 1; i++) {
+                    const [x1, y1] = controlPoints[i];
+                    const [x2, y2] = controlPoints[i + 1];
+                    if (environmentalScore >= x1 && environmentalScore <= x2) {
+                        particleCount = y1 + (environmentalScore - x1) * (y2 - y1) / (x2 - x1);
+                        break;
+                    }
+                }
+                if (environmentalScore > controlPoints[controlPoints.length - 1][0]) {
+                    const [x1, y1] = controlPoints[controlPoints.length - 2];
+                    const [x2, y2] = controlPoints[controlPoints.length - 1];
+                    const slope = (y2 - y1) / (x2 - x1);
+                    particleCount = y2 + (environmentalScore - x2) * slope;
+                }
+                particleCount = Math.min(particleCount, 50000);
+                particleCount = Math.max(particleCount, 100);
+                return Math.round(particleCount);
+            };
+            
+            const changeGuiTop = (value_top) => {
+                document.querySelector('#country-text').setAttribute('value', value_top)
+            }
+            const LeaveCountry = () => {
+                document.querySelector('#info-text').setAttribute('value','Show Info')
+                document.querySelector('#info-image').setAttribute('visible', 'false')
+                document.querySelectorAll('.menu-country').forEach(i => { i.setAttribute('class', 'unmenu-country'); i.setAttribute('visible', 'false') })
+                document.querySelectorAll('.text-in-country').forEach(i => { i.setAttribute('visible', 'false') })
+                document.querySelector('#results-gui').setAttribute('visible', 'false')
+                HideVariables()
+            }
+            const EnterCountry = (country) => {
+                document.querySelector('#info-image').setAttribute('src', `#${country}-info`)
+                document.querySelector('#money-value').setAttribute('value', `${getMoneyNeededForLiving(final, country)} Euros`);
+                document.querySelector('#temperature-value').setAttribute('value', `${getTemperatureFromImpact(final, country)}C`);
+                document.querySelector('#happiness-value').setAttribute('value', `${getHappinessFromImpact(final)}%`);
+                document.querySelectorAll('.unmenu-country').forEach(i => { i.setAttribute('class', 'menu-country'); i.setAttribute('visible', 'true') })
+                document.querySelectorAll('.text-in-country').forEach(i => { i.setAttribute('visible', 'true') })
+                document.querySelector('#results-gui').setAttribute('visible', 'true')
+                HideVariables()
+            }
+            const HideVariables = () => {
+                document.querySelector('#menu-button-variable-text').setAttribute('value', 'Open')
+                document.querySelector('#menu-with-buttons').setAttribute('visible', 'false')
+                document.querySelectorAll('.clickable-variable').forEach(i => i.setAttribute('class', 'unclickable-variable'))
+            }
+            const ShowVariables = () => {
+                document.querySelector('#menu-button-variable-text').setAttribute('value', 'Close')
+                document.querySelector('#menu-with-buttons').setAttribute('visible', 'true')
+                document.querySelectorAll('.unclickable-variable').forEach(i => i.setAttribute('class', 'clickable-variable'))
+            }
+            const MakeAttribute = (evt, max, decimal, side, clip, clipto, perc) => {
+
+                const track = document.querySelector(`#${evt.currentTarget.getAttribute('id')}`);
+                const handle = document.querySelector(`#${evt.currentTarget.getAttribute('id')}H`);
+                const label = document.querySelector(`#${evt.currentTarget.getAttribute('id')}V`);
+                const intersection = evt.detail.intersection;
+                let value;
+                let localX
+                if (!intersection) return;
+                if (side == 'x') {
+                    if (track.id != 'test') {
+                        localX = intersection.point.x - track.parentElement.object3D.position.x - track.parentElement.parentElement.parentElement.parentElement.object3D.position.x;
+                    }
+                    else {
+                        localX = intersection.point.x - track.parentElement.object3D.position.x
+                    }
+                    console.log(track.id)
+                    console.log(localX)
+                    const halfWidth = track.getAttribute('width') / 2;
+                    const clampedX = Math.max(-halfWidth, Math.min(halfWidth, localX));
+
+                    const newX = clampedX;
+                    handle.setAttribute('position', `${newX} 0 -2`);
+
+                    value = ((clampedX + halfWidth) / (2 * halfWidth)) * max;
+                }
+                else if (side == 'z') {
+                    const localZ = intersection.point.z - track.parentElement.object3D.position.z - track.parentElement.parentElement.parentElement.parentElement.object3D.position.z;
+                    const halfWidth = track.getAttribute('width') / 2;
+                    const clampedZ = Math.max(-halfWidth, Math.min(halfWidth, localZ));
+
+                    const newZ = clampedZ;
+                    handle.setAttribute('position', `${newZ} 0 -2`);
+
+                    value = ((clampedZ + halfWidth) / (2 * halfWidth)) * max;
+                }
+
+                if (clip) {
+                    perc ? label.setAttribute('value', `${((((value / decimal).toFixed()) * decimal).toString()).slice(0, clipto).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%`) : label.setAttribute('value', `${((((value / decimal).toFixed()) * decimal).toString()).slice(0, clipto).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`)
+
+                }
+                else {
+                    perc ? label.setAttribute('value', `${((((value / decimal).toFixed()) * decimal).toString()).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%`) : label.setAttribute('value', `${((((value / decimal).toFixed()) * decimal).toString()).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`)
+                }
+                if (track.id != 'test') {
+                    console.log(track.id)
+                    updateValue(evt.currentTarget.getAttribute('id'), parseInt(((value / decimal).toFixed()) * clip ? parseFloat(((((value / decimal).toFixed()) * decimal).toString()).slice(0, clipto)) : parseInt(((value / decimal).toFixed()) * decimal).toString()))
+                }
+            }
+
+            document.querySelector('#menu-button-variable').addEventListener('click', (event) => {
+                if (document.querySelector('#menu-button-variable-text').getAttribute('value') == 'Open') {
+
+                    ShowVariables()
+
+                }
+                else if (document.querySelector('#menu-button-variable-text').getAttribute('value') == 'Close') {
+                    HideVariables()
+                }
+            })
+
+            document.querySelector('#test').addEventListener('click', (event) => { MakeAttribute(event, 1000000000, 1000000, 'x', false, 0, false) })
+            //-------------------------------------------------------------------------------------------------------------------------------------------//
+            document.querySelector('#cartotal').addEventListener('click', (event) => { MakeAttribute(event, 5000000000, 1000000, 'x', false, 0, false) })
+            document.querySelector('#carelectric_').addEventListener('click', (event) => { MakeAttribute(event, 100, 1, 'x', false, 0, true) })
+            document.querySelector('#waterwaste_').addEventListener('click', (event) => { MakeAttribute(event, 100, 1, 'x', false, 0, true) })
+            document.querySelector('#gastotal').addEventListener('click', (event) => { MakeAttribute(event, 100000, 100, 'x', false, 0, false) })
+            document.querySelector('#defor').addEventListener('click', (event) => { MakeAttribute(event, 10, 0.01, 'x', true, 4, true) })
+            document.querySelector('#renewenergy_').addEventListener('click', (event) => { MakeAttribute(event, 100, 1, 'x', false, 0, true) })
+            document.querySelector('#meat').addEventListener('click', (event) => { MakeAttribute(event, 500000000, 1000000, 'x', false, 0, false) })
+            document.querySelector('#plasticwaste').addEventListener('click', (event) => { MakeAttribute(event, 1000, 10, 'x', false, 0, false) })
+            //-------------------------------------------------------------------------------------------------------------------------------------------//
+            document.querySelector('#publictrans_').addEventListener('click', (event) => { MakeAttribute(event, 100, 1, 'z', false, 0, true) })
+            document.querySelector('#aircon').addEventListener('click', (event) => { MakeAttribute(event, 10000000000, 1000000, 'z', false, 0, false) })
+            document.querySelector('#treeplant').addEventListener('click', (event) => { MakeAttribute(event, 10000000000, 1000000, 'z', false, 0, false) })
+            document.querySelector('#factory_').addEventListener('click', (event) => { MakeAttribute(event, 100, 1, 'z', false, 0, true) })
+            document.querySelector('#funding').addEventListener('click', (event) => { MakeAttribute(event, 1000000000000, 1000000000, 'z', false, 0, false) })
+            document.querySelector('#littering').addEventListener('click', (event) => { MakeAttribute(event, 10000, 100, 'z', false, 0, false) })
+            document.querySelector('#recycle_').addEventListener('click', (event) => { MakeAttribute(event, 100, 1, 'z', false, 0, true) })
+            document.querySelector('#eco_').addEventListener('click', (event) => { MakeAttribute(event, 100, 1, 'z', false, 0, true) })
+        </script>
+    </a-scene>
+</body>
+</html>
